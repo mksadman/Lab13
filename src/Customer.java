@@ -254,8 +254,8 @@ public class Customer {
      * @param f flight to associate
      */
     void addNewFlightToCustomerList(Flight f) {
-        this.flightsRegisteredByUser.add(f);
-        // numOfFlights++;
+        FlightManager flightManager = new FlightManager();
+        flightManager.registerNewFlight(this, f);
     }
 
     /**
@@ -265,8 +265,8 @@ public class Customer {
      * @param numOfTickets how many tickets to add
      */
     void addExistingFlightToCustomerList(int index, int numOfTickets) {
-        int newNumOfTickets = numOfTicketsBookedByUser.get(index) + numOfTickets;
-        this.numOfTicketsBookedByUser.set(index, newNumOfTickets);
+        FlightManager flightManager = new FlightManager();
+        flightManager.addTicketsToExistingFlight(this, index, numOfTickets);
     }
 
     // ************************************************************ Setters &
