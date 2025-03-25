@@ -3,9 +3,11 @@ import java.util.Scanner;
 public class UserInterface {
 
     private Scanner scanner;
-    
+    private final InputValidationService validationService;
+
     public UserInterface(Scanner scanner) {
         this.scanner = scanner;
+        this.validationService = new InputValidationService();
     }
     
     /**
@@ -209,5 +211,23 @@ public class UserInterface {
      */
     public void displayMessage(String message) {
         System.out.println(message);
+    }
+    
+    /**
+     * Gets valid menu option from console input
+     * @param minValue The minimum value for the valid menu option
+     * @param maxValue The maximum value for the valid menu option
+     * @return The valid menu option
+     */
+    public int getValidMenuOption(int minValue, int maxValue) {
+        int option = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        while (!validationService.isValidMenuOption(option, minValue, maxValue)) {
+            System.out.printf("ERROR!! Please enter value between %d - %d. Enter the value again:\t", minValue, maxValue);
+            option = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+        }
+        return option;
     }
 }
