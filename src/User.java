@@ -1,28 +1,14 @@
-/*
- * This class is intended to be the main class for this Project. All necessary methods are getting calls from this class.
- *
- *
- */
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class User {
 
-    // ************************************************************ Fields
-    // ************************************************************
+    // 2D Array to store admin credentials. Default credentials are stored on [0][0]
+    // index. Max num of admins can be 10....
 
-    /*
-     * 2D Array to store admin credentials. Default credentials are stored on [0][0]
-     * index. Max num of admins can be 10....
-     */
     static String[][] adminUserNameAndPassword = new String[10][2];
     private static List<Customer> customersCollection = new ArrayList<>();
-
-    // ************************************************************
-    // Behaviours/Methods
-    // ************************************************************
 
     public static void main(String[] args) {
         int countNumOfUsers = 1;
@@ -47,14 +33,6 @@ public class User {
 
         do {
             Scanner read1 = new Scanner(System.in);
-            /*
-             * If desiredOption is 1 then call the login method.... if default credentials
-             * are used then set the permission
-             * level to standard/default where the user can just view the customer's
-             * data...if not found, then return -1, and if
-             * data is found then show the user display menu for adding, updating, deleting
-             * and searching users/customers...
-             */
             if (desiredOption == 1) {
 
                 /* Default username and password.... */
@@ -67,7 +45,6 @@ public class User {
                 String password = read1.nextLine();
                 System.out.println();
 
-                /* Checking the RolesAndPermissions...... */
                 if (r1.isPrivilegedUserOrNot(username, password) == -1) {
                     System.out.printf(
                             "\n%20sERROR!!! Unable to login Cannot find user with the entered credentials.... Try Creating New Credentials or get yourself register by pressing 4....\n",
@@ -376,9 +353,6 @@ public class User {
                     "(12) Pressing \"0\" will make you logout of the program...You can login back at anytime with your credentials...for this particular run-time... \n");
         }
     }
-
-    // ************************************************************ Setters &
-    // Getters ************************************************************
 
     public static List<Customer> getCustomersCollection() {
         return customersCollection;
