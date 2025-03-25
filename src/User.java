@@ -9,6 +9,12 @@ public class User {
 
     static String[][] adminUserNameAndPassword = new String[10][2];
     private static List<Customer> customersCollection = new ArrayList<>();
+    
+    // Initialize default admin credentials
+    static {
+        adminUserNameAndPassword[0][0] = "root";
+        adminUserNameAndPassword[0][1] = "root";
+    }
 
     public static void main(String[] args) {
         int countNumOfUsers = 1;
@@ -17,8 +23,10 @@ public class User {
         FlightReservation bookingAndReserving = new FlightReservation();
         Customer c1 = new Customer();
         f1.flightScheduler();
+        
+        // Use a single Scanner for the entire program
         Scanner read = new Scanner(System.in);
-
+        Scanner read1 = new Scanner(System.in);
        
         System.out.println(
                 "\n\t\t\t\t\t+++++++++++++ Welcome to BAV AirLines +++++++++++++\n\nTo Further Proceed, Please enter a value.");
@@ -27,29 +35,23 @@ public class User {
         displayMainMenu();
         int desiredOption = read.nextInt();
         while (desiredOption < 0 || desiredOption > 8) {
-            System.out.print("ERROR!! Please enter value between 0 - 4. Enter the value again :\t");
+            System.out.print("ERROR!! Please enter value between 0 - 8. Enter the value again :\t");
             desiredOption = read.nextInt();
         }
 
         do {
-            Scanner read1 = new Scanner(System.in);
             if (desiredOption == 1) {
-
-                /* Default username and password.... */
-                adminUserNameAndPassword[0][0] = "root";
-                adminUserNameAndPassword[0][1] = "root";
-                
                 System.out.print("\nEnter the UserName to login to the Management System :     ");
                 String username = read1.nextLine();
                 System.out.print("Enter the Password to login to the Management System :    ");
                 String password = read1.nextLine();
                 System.out.println();
 
-                if (r1.isPrivilegedUserOrNot(username, password) == -1) {
+                if (r1.checkAdminAccess(username, password) == -1) {
                     System.out.printf(
-                            "\n%20sERROR!!! Unable to login Cannot find user with the entered credentials.... Try Creating New Credentials or get yourself register by pressing 4....\n",
+                            "\n%20sERROR!!! Unable to login Cannot find user with the entered credentials.... Try Creating New Credentials or get yourself register by pressing 4...\n",
                             "");
-                } else if (r1.isPrivilegedUserOrNot(username, password) == 0) {
+                } else if (r1.checkAdminAccess(username, password) == 0) {
                     System.out.println(
                             "You've standard/default privileges to access the data... You can just view customers data..."
                                     + "Can't perform any actions on them....");
@@ -157,7 +159,6 @@ public class User {
                             f1.deleteFlight(flightNum);
 
                         } else if (desiredOption == 0) {
-                            ;
                             System.out.println("Thanks for Using BAV Airlines Ticketing System...!!!");
 
                         } else {
@@ -179,7 +180,7 @@ public class User {
                 String username = read1.nextLine();
                 System.out.print("Enter the Password to Register :     ");
                 String password = read1.nextLine();
-                while (r1.isPrivilegedUserOrNot(username, password) != -1) {
+                while (r1.checkAdminAccess(username, password) != -1) {
                     System.out.print("ERROR!!! Admin with same UserName already exist. Enter new UserName:   ");
                     username = read1.nextLine();
                     System.out.print("Enter the Password Again:   ");
@@ -270,20 +271,24 @@ public class User {
                             "");
                 }
             } else if (desiredOption == 4) {
-
                 c1.addNewCustomer();
             } else if (desiredOption == 5) {
-                manualInstructions();
+                manualInstructions(read);
             }
 
             displayMainMenu();
-            desiredOption = read1.nextInt();
+            desiredOption = read.nextInt();
+            read.nextLine(); // Consume the newline character
             while (desiredOption < 0 || desiredOption > 8) {
-                System.out.print("ERROR!! Please enter value between 0 - 4. Enter the value again :\t");
-                desiredOption = read1.nextInt();
+                System.out.print("ERROR!! Please enter value between 0 - 8. Enter the value again :\t");
+                desiredOption = read.nextInt();
+                read.nextLine(); // Consume the newline character
             }
         } while (desiredOption != 0);
-
+        
+        // Close the scanners to prevent resource leaks
+        read.close();
+        read1.close();
     }
 
     static void displayMainMenu() {
@@ -296,17 +301,18 @@ public class User {
         System.out.print("\t\tEnter the desired option:    ");
     }
 
-    static void manualInstructions() {
-        Scanner read = new Scanner(System.in);
+    static void manualInstructions(Scanner read) {
         System.out.printf("%n%n%50s %s Welcome to BAV Airlines User Manual %s", "", "+++++++++++++++++",
                 "+++++++++++++++++");
         System.out.println("\n\n\t\t(a) Press 1 to display Admin Manual.");
         System.out.println("\t\t(b) Press 2 to display User Manual.");
         System.out.print("\nEnter the desired option :    ");
         int choice = read.nextInt();
+        read.nextLine(); // Consume the newline character
         while (choice < 1 || choice > 2) {
             System.out.print("ERROR!!! Invalid entry...Please enter a value either 1 or 2....Enter again....");
             choice = read.nextInt();
+            read.nextLine(); // Consume the newline character
         }
         if (choice == 1) {
             System.out.println(
@@ -330,7 +336,7 @@ public class User {
             System.out.println(
                     "(11) Pressing \"7\" will let you delete any flight given its flight number provided...\n");
             System.out.println(
-                    "(11) Pressing \"0\" will make you logged out of the program...You can login again any time you want during the program execution....\n");
+                    "(12) Pressing \"0\" will make you logged out of the program...You can login again any time you want during the program execution....\n");
         } else {
             System.out.println(
                     "\n\n(1) Local user has the access to its data only...He/She won't be able to change/update other users data...\n");
